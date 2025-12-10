@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 
 
 const ChatBox = () => {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState<string>('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSubmit = (e: React.FormEvent) => {

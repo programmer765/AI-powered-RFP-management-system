@@ -1,5 +1,7 @@
-  import express from 'express';
+  import express, { Router } from 'express';
   import cors from 'cors';
+  import dotenv from 'dotenv';
+  dotenv.config();
   import chatRouter from './routes/chat';
 
   const app = express();
@@ -10,8 +12,11 @@
 
   const port = 3000;
 
+  const router = Router();
 
-  app.use('/chat', chatRouter);
+  router.use('/chat', chatRouter);
+
+  app.use('/api', router);
 
   app.get('/', (req, res) => {
     res.send('Hello from TypeScript Node.js Server!');

@@ -18,7 +18,7 @@ chatRouter.post("/message", async (req: Request, res: Response) => {
       system_instruction: {
         parts: [
           {
-            text: "Arrange the following message into a formal Request for Proposal (RFP) document format, including sections such as Introduction, Objectives, Scope of Work, Deliverables, Timeline, Budget, and Evaluation Criteria."
+            text: "Provide a json response with the important keywords from the user's message for the product, like product specs, product name, price, availability, and any other relevant details. And don't provide any other text outside of the json response. Just respond with the json object of the product."
           }
         ]
       },
@@ -31,8 +31,14 @@ chatRouter.post("/message", async (req: Request, res: Response) => {
   })
 
   const data = await resp.json();
+  const replyText = data?.candidates?.[0]?.content?.parts?.[0].text || "No reply";
+  if(replyText === "No reply") {
+    return res.status(500).json({ error: "No reply from Gemini API" });
+  }
+  const replyJsonText = replyText.substring(replyText.indexOf('{'), replyText.lastIndexOf('}') + 1);
+  const replyJson = JSON.parse(replyJsonText);
   console.log(data)
-  res.status(200).json({ reply: data });
+  res.status(200).json({ reply: replyJson });
 });
 
 export default chatRouter;
